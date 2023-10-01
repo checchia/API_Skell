@@ -1,0 +1,35 @@
+#   ____ _                   _     _         _   _ _____ _____
+#  / ___| |__   ___  ___ ___| |__ (_) __ _  | \ | | ____|_   _|
+# | |   | '_ \ / _ \/ __/ __| '_ \| |/ _` | |  \| |  _|   | |
+# | |___| | | |  __/ (_| (__| | | | | (_| |_| |\  | |___  | |
+#  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
+#
+#
+# By Checchia - 07.09.2023
+#
+# openssl rand -hex 32
+#
+[ENV]
+TITLE="NasaMail"
+DESCRIPTION="API de disparo de e-mails (com rastreio de entrega)"
+VERSION="1.0.0"
+
+[APPKEY]
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+SECRET_KEY=
+
+[SECRETS]
+# DATABASE_URL=mongodb://localhost:27017/mailx
+MONGO_HOST=127.0.0.1
+MONGO_PORT=27017
+MONGO_DB=
+MONGO_USR=
+MONGO_PASS=
+
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+
+

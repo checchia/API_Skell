@@ -7,22 +7,14 @@
 # By Checchia - 09/2023
 #
 import os, configparser
-from fastapi import FastAPI
+from fastapi import FastAPI, Body, Response, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from utils.utils import Response
 from config.config import initiate_database
-#from routes.login import router as loginRouter
-
-config = configparser.ConfigParser()
-config.read(".env")
-ENV = config['ENV']
-APPKEY = config['APPKEY']
-SECRETS = config['SECRETS']
 
 app = FastAPI(
-    title = ENV['TITLE'],
-    description=ENV['DESCRIPTION'],
-    version=ENV['VERSION'],
+    title = os.getenv('TITLE'),
+    description= os.getenv('DESCRIPTION'),
+    version= os.getenv('VERSION'),
 )
 
 origins = [
@@ -49,26 +41,29 @@ async def shutdown_database():
     print("Conexão com o banco de dados encerrada.")
 
 
-@app.get("/", tags=["/"], response_model=Response)
+@app.get("/", tags=["/"])
 async def api_root():
     dataBase = "0.0005 ms"
     postFix = "0.0001 ms"
+    DATA = {"message": "OK"}
     return {
-        "status_code": 200,
+        "data": DATA,
+        "status_code": status.HTTP_200_OK,
         "response_type": "success",
         "description": "Done!",
-        "data": {"message": "OK"},
+
     }
 
-@app.get("/healthcheck", tags=["/"], response_model=Response)
+@app.get("/healthcheck", tags=["/"])
 async def valida_healthcheck():
     dataBase = "0.0005 ms"
     postFix = "0.0001 ms"
+    DATA = {"database": dataBase, "smtp": postFix}
     return {
-        "status_code": 200,
+        "status_code": status.HTTP_200_OK,
         "response_type": "success",
         "description": "Healthcheck done!",
-        "data": {"database": dataBase, "smtp": postFix},
+        "data": DATA,
     }
 
 #app.include_router(loginRouter, tags=["login"], prefix="/login")

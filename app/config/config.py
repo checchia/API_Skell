@@ -10,24 +10,13 @@ import os, configparser
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import FastAPI
 
-config = configparser.ConfigParser()
-config.read(".env")
-ENV = config['ENV']
-APPKEY = config['APPKEY']
-SECRETS = config['SECRETS']
-
-app = FastAPI()
-
-# Configurações do MongoDB
-MONGO_DB_URL = "mongodb://localhost:27017"
-MONGO_DB_NAME = "sua_base_de_dados"
-
-# Conectar ao MongoDB
-mongo_client = AsyncIOMotorClient(MONGO_DB_URL)
-db = mongo_client[MONGO_DB_NAME]
-
-# Função para iniciar o banco de dados
 async def initiate_database():
-    # Lógica para iniciar o banco de dados, se necessário
-    pass
+    USR = os.getenv('MONGO_USR')
+    PASS = os.getenv('MONGO_PASS')
+    HOST = os.getenv('MONGO_HOST')
+    PORT = os.getenv('MONGO_PORT')
+    DB =  os.getenv('MONGO_DB')
+
+    mongo_uri = f'mongodb://{USR}:{PASS}@{HOST}:{PORT}/{DB}'
+    client = AsyncIOMotorClient(mongo_uri)
 

@@ -7,9 +7,12 @@
 # By Checchia - 09/2023
 #
 import os, configparser
+from datetime import datetime
 from fastapi import FastAPI, Body, Response, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from config.config import initiate_database
+from utils.errordict import create_database_if_not_exists, http_error
 
 app = FastAPI(
     title = os.getenv('TITLE'),
@@ -31,6 +34,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def start_database():
+    create_database_if_not_exists()
     await initiate_database()
     print("Conexão com o banco de dados estabelecida.")
 
@@ -40,18 +44,26 @@ async def shutdown_database():
     # Lógica para fechar a conexão com o banco de dados, se necessário
     print("Conexão com o banco de dados encerrada.")
 
+@app.middleware("http")
+async def measure_time(request, call_next):
+    start_time = datetime.now()
+    response = await call_next(request)
+    end_time = datetime.now()
+    execution_time = end_time - start_time
+    response.headers["X-Execution-Time"] = str(execution_time)
+    return response
+
 
 @app.get("/", tags=["/"])
 async def api_root():
+    import time
     dataBase = "0.0005 ms"
     postFix = "0.0001 ms"
     DATA = {"message": "OK"}
     return {
-        "data": DATA,
         "status_code": status.HTTP_200_OK,
-        "response_type": "success",
         "description": "Done!",
-
+        "data": DATA,
     }
 
 @app.get("/healthcheck", tags=["/"])
@@ -61,8 +73,18 @@ async def valida_healthcheck():
     DATA = {"database": dataBase, "smtp": postFix}
     return {
         "status_code": status.HTTP_200_OK,
-        "response_type": "success",
         "description": "Healthcheck done!",
+        "data": DATA,
+    }
+
+@app.get("/error/{code}", tags=["/"])
+async def get_error_code(code):
+    result = http_error(code)
+
+    DATA = {"message": "OK", "result": result}
+    return {
+        "status_code": status.HTTP_200_OK,
+        "description": "Done!",
         "data": DATA,
     }
 

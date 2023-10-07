@@ -6,7 +6,7 @@
 #  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
 # By Checchia - 09/2023
 #
-import os
+import uvicorn, asyncio
 from datetime import datetime
 from fastapi import FastAPI, Body, Response, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -95,3 +95,12 @@ async def get_error_code(code):
 
 #app.include_router(loginRouter, tags=["login"], prefix="/login")
 #app.include_router(emailRouter, tags=["e-mail"], prefix="/email", dependencies=[Depends(token_listener)],)
+
+
+async def main():
+    config = uvicorn.Config("main:app", port=8080, log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
+
+if __name__ == "__main__":
+    asyncio.run(main())

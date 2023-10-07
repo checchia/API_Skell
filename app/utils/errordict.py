@@ -6,7 +6,7 @@
 #  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
 # By Checchia - Setembro.2023
 #
-import sqlite3, configparser, json, csv, os
+import json, csv, os
 from tinydb import TinyDB, Query
 
 json_data = {

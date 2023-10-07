@@ -6,18 +6,24 @@
 #  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
 # By Checchia - 09/2023
 #
-import os, configparser
+import os
 from datetime import datetime
 from fastapi import FastAPI, Body, Response, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from config.config import initiate_database
 from utils.errordict import create_database_if_not_exists, http_error
+from utils.vault import get_vault
+
+ENV = get_vault("env")
+SMTP = get_vault("SMTP")
+MONGODB = get_vault("MONGODB")
+APPKEY = get_vault("APPKEY")
 
 app = FastAPI(
-    title = os.getenv('TITLE'),
-    description= os.getenv('DESCRIPTION'),
-    version= os.getenv('VERSION'),
+    title = ENV['TITLE'],
+    description= ENV['DESCRIPTION'],
+    version= ENV['VERSION'],
 )
 
 origins = [
@@ -55,8 +61,7 @@ async def measure_time(request, call_next):
 
 
 @app.get("/", tags=["/"])
-async def api_root():
-    import time
+async def root():
     dataBase = "0.0005 ms"
     postFix = "0.0001 ms"
     DATA = {"message": "OK"}
@@ -67,7 +72,7 @@ async def api_root():
     }
 
 @app.get("/healthcheck", tags=["/"])
-async def valida_healthcheck():
+async def healthcheck():
     dataBase = "0.0005 ms"
     postFix = "0.0001 ms"
     DATA = {"database": dataBase, "smtp": postFix}

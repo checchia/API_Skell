@@ -6,17 +6,19 @@
 #  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
 #
 #
-import os, configparser
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import FastAPI
+from utils.vault import get_vault
 
 async def initiate_database():
-    USR = os.getenv('MONGO_USR')
-    PASS = os.getenv('MONGO_PASS')
-    HOST = os.getenv('MONGO_HOST')
-    PORT = os.getenv('MONGO_PORT')
-    DB =  os.getenv('MONGO_DB')
+    MONGODB = get_vault("MONGODB")
+    user = MONGODB['MONGO_USR']
+    password = MONGODB['MONGO_PASS']
+    host = MONGODB['MONGO_HOST']
+    port = MONGODB['MONGO_PORT']
+    db = MONGODB['MONGO_DB']
 
-    mongo_uri = f'mongodb://{USR}:{PASS}@{HOST}:{PORT}/{DB}'
+    mongo_uri = f'mongodb://{user}:{password}@{host}:{port}/{db}'
     client = AsyncIOMotorClient(mongo_uri)
 

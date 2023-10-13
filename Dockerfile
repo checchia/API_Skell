@@ -11,8 +11,7 @@ FROM cgr.dev/chainguard/python:latest
 WORKDIR /app
 COPY . /
 
-COPY --from=builder /home/nonroot/.local/lib /home/nonroot/.local/lib
-COPY --from=builder /home/nonroot/.local/bin /home/nonroot/.local/bin
+COPY --from=builder /home/nonroot/.local /home/nonroot/.local
 
 ENV PATH="${PATH}:/home/nonroot/.local/bin"
 

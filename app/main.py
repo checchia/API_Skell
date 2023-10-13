@@ -6,7 +6,7 @@
 #  \____|_| |_|\___|\___\___|_| |_|_|\__,_(_)_| \_|_____| |_|
 # By Checchia - 09/2023
 #
-import uvicorn, asyncio
+import uvicorn, asyncio, os
 from datetime import datetime
 from fastapi import FastAPI, Body, Response, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

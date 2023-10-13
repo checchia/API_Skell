@@ -59,7 +59,7 @@ json_data = {
 }
 
 def create_database_if_not_exists():
-    db = TinyDB('banco.json')
+    db = TinyDB('/tmp/banco.json')
     if len(db.all()) == 0:
         for http_code, message in json_data.items():
             db.insert({'http_code': int(http_code), 'message': message})
@@ -68,7 +68,7 @@ def create_database_if_not_exists():
         print("O banco de dados já existe e possui dados.")
 
 def http_error(error_code):
-    db = TinyDB('banco.json')
+    db = TinyDB('/tmp/banco.json')
     tabela = db.table('_default')
     consulta = Query()
     print("error_code", error_code)
